@@ -13,8 +13,8 @@
             import com.esri.model.Model;
             import com.esri.signal.Signal;
             import com.esri.views.ViewLocator;
-            
-            <!-- QQQ2 -->
+
+            <!-- MMM2 -->
 
             override protected function createChildren():void
             {
