@@ -191,6 +191,7 @@ public class ContextMenuController implements IMXMLObject
     private function buffer_menuItemSelectHandler(event:ContextMenuEvent):void
     {
         const graphic:Graphic = event.contextMenuOwner as Graphic;
+        Signal.send('bufferWindow', graphic);
     /*
     const appEvent:AppEvent = new AppEvent(AppEvent.BUFFER_WINDOW);
     appEvent.graphic = graphic;
