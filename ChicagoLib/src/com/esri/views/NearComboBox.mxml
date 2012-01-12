@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ComboBox xmlns:fx="http://ns.adobe.com/mxml/2009"
+            xmlns:s="library://ns.adobe.com/flex/spark"
+            xmlns:mx="library://ns.adobe.com/flex/mx"
+            change="this_changeHandler(event)"
+            creationComplete="this_creationCompleteHandler(event)"
+            requireSelection="true">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.model.Model;
+            import com.esri.signal.Signal;
+
+            import mx.events.FlexEvent;
+
+            import spark.events.IndexChangeEvent;
+
+            private function this_creationCompleteHandler(event:FlexEvent):void
+            {
+                var maxitem:String = "mmmmmmmmmm";
+                const index:int = 0;
+                const count:int = 0;
+                for each (var feature:Graphic in Model.instance.markers.source)
+                {
+                    const dataItem:DataItem = new DataItem();
+                    dataItem.feature = feature;
+                    dataItem.data = index++;
+                    const attr:Object = feature.attributes;
+                    if (attr && attr.label)
+                    {
+                        dataItem.label = attr.label;
+                    }
+                    else
+                    {
+                        dataItem.label = "Drawn Point #" + count++;
+                    }
+                    if (dataItem.label.length > maxitem.length)
+                    {
+                        maxitem = dataItem.label;
+                    }
+                    arrList.addItem(dataItem);
+                }
+                typicalItem = maxitem;
+            }
+
+            private function this_changeHandler(event:IndexChangeEvent):void
+            {
+                const data:Number = selectedItem.data;
+                if (data > -1)
+                {
+                    Signal.send('activeFeature', Model.instance.markers.getItemAt(data));
+                }
+            }
+        ]]>
+    </fx:Script>
+    <s:dataProvider>
+        <s:ArrayList id="arrList">
+            <s:DataItem data="-1" label="Map Click"/>
+        </s:ArrayList>
+    </s:dataProvider>
+</s:ComboBox>

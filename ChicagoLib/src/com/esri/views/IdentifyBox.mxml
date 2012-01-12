@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+         height="{Model.instance.identifyWindowHeight}"
+         minWidth="{Model.instance.identifyWindowWidth}">
+    <mx:Script>
+        <![CDATA[
+            import com.esri.model.Model;
+            import com.esri.signal.Signal;
+
+            private function next_clickHandler():void
+            {
+                Signal.send('identifyNext');
+            }
+
+            private function prev_clickHandler():void
+            {
+                Signal.send('identifyPrev');
+            }
+        ]]>
+    </mx:Script>
+    <mx:DataGrid width="100%" height="100%"
+                 dataProvider="{Model.instance.identifyDataGridProvider}"
+                 selectable="false"
+                 verticalScrollPolicy="on">
+        <mx:columns>
+            <mx:DataGridColumn dataField="key"
+                               headerText="Key"
+                               textAlign="left"/>
+            <mx:DataGridColumn dataField="val"
+                               headerText="Value"
+                               itemRenderer="com.esri.views.IdentifyValueRenderer"
+                               paddingRight="5"
+                               textAlign="right"/>
+        </mx:columns>
+    </mx:DataGrid>
+    <mx:HBox width="100%">
+        <mx:Button click="prev_clickHandler()"
+                   label="&lt;"
+                   visible="{Model.instance.identifyIndex!==0}"/>
+        <mx:Spacer width="100%"/>
+        <mx:Label text="{Model.instance.identifyIndex+1} of {Model.instance.identifyCount}"/>
+        <mx:Spacer width="100%"/>
+        <mx:Button click="next_clickHandler()"
+                   label="&gt;"
+                   visible="{Model.instance.identifyIndex!==Model.instance.identifyCount-1}"/>
+    </mx:HBox>
+</mx:VBox>

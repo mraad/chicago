@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataRenderer xmlns:fx="http://ns.adobe.com/mxml/2009"
+                xmlns:s="library://ns.adobe.com/flex/spark"
+                xmlns:mx="library://ns.adobe.com/flex/mx"
+                width="100%">
+    <s:layout>
+        <s:HorizontalLayout paddingLeft="5"
+                            paddingRight="5"
+                            verticalAlign="middle"/>
+    </s:layout>
+
+    <fx:Script>
+        <![CDATA[
+            private function remButton_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event("remFieldRenderer", true, true));
+            }
+
+            private function addButton_clickHandler(event:MouseEvent):void
+            {
+                dispatchEvent(new Event("addFieldRenderer", true, true));
+            }
+        ]]>
+    </fx:Script>
+
+    <fx:Declarations>
+        <s:ArrayList id="fieldList"/>
+    </fx:Declarations>
+
+    <s:DropDownList id="field"
+                    dataProvider="{fieldList}"
+                    labelField="label"
+                    requireSelection="true"/>
+    <s:DropDownList id="operator" requireSelection="true">
+        <s:dataProvider>
+            <s:ArrayList>
+                <s:DataItem data="$eq" label="Equals"/>
+                <s:DataItem data="$ct" label="Contains"/>
+                <s:DataItem data="$sw" label="Starts with"/>
+                <s:DataItem data="$ew" label="Ends with"/>
+                <s:DataItem data="$lt" label="Less than"/>
+                <s:DataItem data="$lte" label="Less or equal"/>
+                <s:DataItem data="$gt" label="Greater than"/>
+                <s:DataItem data="$gte" label="Greater or equal"/>
+                <s:DataItem data="$in" label="In"/>
+                <s:DataItem data="$nin" label="Not in"/>
+                <s:DataItem data="$all" label="All"/>
+                <s:DataItem data="$not" label="Not"/>
+            </s:ArrayList>
+        </s:dataProvider>
+    </s:DropDownList>
+    <s:TextInput id="textInput" width="100%"/>
+    <s:Button id="remButton"
+              width="30"
+              click="remButton_clickHandler(event)"
+              label="-"/>
+    <s:Button id="addButton"
+              width="30"
+              click="addButton_clickHandler(event)"
+              label="+"/>
+</s:DataRenderer>

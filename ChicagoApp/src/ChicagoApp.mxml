@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               xmlns:ns="http://holistic.thunderhead.esri.com/2011"
+               xmlns:views="com.esri.views.*"
+               xmlns:esri="http://www.esri.com/2008/ags"
+               xmlns:controllers="com.esri.controllers.*"
+               applicationComplete="Signal.send('loadConfig')">
+    <fx:Style source="stylesheet.css"/>
+    <fx:Script>
+        <![CDATA[
+            import com.esri.model.Model;
+            import com.esri.signal.Signal;
+            import com.esri.views.ViewLocator;
+
+            override protected function createChildren():void
+            {
+                super.createChildren();
+                ViewLocator.instance.map = map;
+                ViewLocator.instance.polygonsLayer = polygonsLayer;
+                ViewLocator.instance.markersLayer = markersLayer;
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <ns:Registry id="registry">
+            <controllers:MongoService/>
+            <controllers:FaultController/>
+            <controllers:ClearAllController/>
+            <controllers:BasemapController/>
+            <controllers:LoadConfigController/>
+            <controllers:LocatorService/>
+            <controllers:SearchController/>
+            <controllers:IdentifyBoxController/>
+            <controllers:GraphicPropertiesController/>
+            <controllers:ContextMenuController id="contextMenuController"/>
+            <controllers:ClusterPointsController/>
+            <controllers:FindController/>
+            <controllers:DrawController/>
+            <controllers:ActiveFeatureController/>
+        </ns:Registry>
+    </fx:Declarations>
+    <s:layout>
+        <s:VerticalLayout gap="5"
+                          paddingBottom="5"
+                          paddingLeft="5"
+                          paddingRight="5"
+                          paddingTop="5"/>
+    </s:layout>
+    <views:HeaderGroup id="headerGroup" width="100%"/>
+    <views:ActionGroup id="actionGroup" width="100%"/>
+    <esri:Map id="map"
+              extent="{Model.instance.extent}"
+              openHandCursorVisible="false"
+              wrapAround180="false">
+        <esri:infoWindowContent>
+            <views:IdentifyBox/>
+        </esri:infoWindowContent>
+        <esri:ArcGISTiledMapServiceLayer id="basemap" url="{Model.instance.basemapURL}"/>
+        <views:AppGraphicsLayer id="polygonsLayer"
+                                contextMenuController="{contextMenuController}"
+                                graphicProvider="{Model.instance.polygons}"/>
+        <views:AppGraphicsLayer id="markersLayer"
+                                clusterer="{Model.instance.clusterer}"
+                                contextMenuController="{contextMenuController}"
+                                graphicProvider="{Model.instance.markers}"/>
+    </esri:Map>
+    <views:FooterGroup id="footerGroup" width="100%"/>
+</s:Application>

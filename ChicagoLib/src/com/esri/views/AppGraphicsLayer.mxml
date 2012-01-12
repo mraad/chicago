@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<esri:GraphicsLayer xmlns:esri="http://www.esri.com/2008/ags"
+                    xmlns:mx="http://www.adobe.com/2006/mxml"
+                    added="this_addedHandler(event)">
+    <mx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.controllers.ContextMenuController;
+
+            public var contextMenuController:ContextMenuController;
+
+            private function this_addedHandler(event:Event):void
+            {
+                const graphic:Graphic = event.target as Graphic;
+                if (graphic)
+                {
+                    contextMenuController.addContextMenu(graphic);
+                }
+            }
+        ]]>
+    </mx:Script>
+</esri:GraphicsLayer>

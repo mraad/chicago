@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label xmlns:mx="http://www.adobe.com/2006/mxml"
+          width="100%"
+          color="black"
+          selectable="false"
+          text="{data.val}"
+          textAlign="right"
+          truncateToFit="true">
+    <mx:Script>
+        <![CDATA[
+            import com.esri.model.AppKeyVal;
+
+            override public function set data(value:Object):void
+            {
+                super.data = value;
+
+                toolTip = null;
+
+                removeEventListener(MouseEvent.MOUSE_OVER, overHandler);
+                removeEventListener(MouseEvent.MOUSE_OUT, outHandler);
+                removeEventListener(MouseEvent.CLICK, clickLinkHandler);
+                removeEventListener(MouseEvent.CLICK, clickHTTPHandler);
+
+                const keyval:AppKeyVal = value as AppKeyVal;
+                if (keyval)
+                {
+                    const val:String = keyval.val as String;
+                    if (val)
+                    {
+                        if (keyval.field && keyval.field.link)
+                        {
+                            addEventListener(MouseEvent.CLICK, clickLinkHandler);
+                            addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+                            addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+                        }
+                        else if (val.indexOf("http://") === 0)
+                        {
+                            addEventListener(MouseEvent.CLICK, clickHTTPHandler);
+                            addEventListener(MouseEvent.MOUSE_OVER, overHandler);
+                            addEventListener(MouseEvent.MOUSE_OUT, outHandler);
+                        }
+                    }
+                }
+            }
+
+            override protected function measure():void
+            {
+                super.measure();
+                if (measuredWidth < measureText(data.val).width)
+                {
+                    toolTip = data.val;
+                }
+                else
+                {
+                    toolTip = null;
+                }
+            }
+
+            private function clickLinkHandler(event:MouseEvent):void
+            {
+                const keyval:AppKeyVal = data as AppKeyVal;
+            /*
+            const appEvent:AppEvent = new AppEvent(AppEvent.URL);
+            if (keyval.field && keyval.field.link)
+            {
+                appEvent.url = toURL(keyval);
+            }
+            else
+            {
+                appEvent.url = keyval.val;
+            }
+            appEvent.dispatch();
+            */
+            }
+
+            private function clickHTTPHandler(event:MouseEvent):void
+            {
+                const keyval:AppKeyVal = data as AppKeyVal;
+            /*
+            const appEvent:AppEvent = new AppEvent(AppEvent.URL);
+            appEvent.url = keyval.val;
+            appEvent.dispatch();
+            */
+            }
+
+            private function outHandler(event:MouseEvent):void
+            {
+                setStyle("textDecoration", "none");
+            }
+
+            private function overHandler(event:MouseEvent):void
+            {
+                setStyle("textDecoration", "underline");
+            }
+
+            private function toURL(keyval:AppKeyVal):String
+            {
+                const last:Boolean = keyval.field.link.charAt(keyval.field.link.length - 1) === "/";
+                const first:Boolean = keyval.val.toString().charAt(0) === "/";
+                if (last || first)
+                {
+                    return keyval.field.link + keyval.val;
+                }
+                return keyval.field.link + "/" + keyval.val;
+            }
+        ]]>
+    </mx:Script>
+</mx:Label>

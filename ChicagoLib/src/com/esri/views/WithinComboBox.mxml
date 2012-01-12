@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ComboBox xmlns:fx="http://ns.adobe.com/mxml/2009"
+            xmlns:s="library://ns.adobe.com/flex/spark"
+            xmlns:mx="library://ns.adobe.com/flex/mx"
+            creationComplete="this_creationCompleteHandler(event)"
+            requireSelection="true">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.Graphic;
+            import com.esri.model.Model;
+
+            import mx.events.FlexEvent;
+
+            private function this_creationCompleteHandler(event:FlexEvent):void
+            {
+                var maxitem:String = "mmmmmmmmmm";
+                const index:int = 0;
+                const count:int = 0;
+                trace('Model.instance.polygons.length', Model.instance.polygons.length);
+                for each (var feature:Graphic in Model.instance.polygons.source)
+                {
+                    const dataItem:DataItem = new DataItem();
+                    dataItem.feature = feature;
+                    dataItem.data = index++;
+                    const attr:Object = feature.attributes;
+                    if (attr && attr.label)
+                    {
+                        dataItem.label = attr.label;
+                    }
+                    else
+                    {
+                        dataItem.label = "Drawn Polygon #" + count++;
+                    }
+                    if (dataItem.label.length > maxitem.length)
+                    {
+                        maxitem = dataItem.label;
+                    }
+                    arrList.addItem(dataItem);
+                }
+                typicalItem = maxitem;
+            }
+        ]]>
+    </fx:Script>
+    <s:dataProvider>
+        <s:ArrayList id="arrList">
+            <s:DataItem data="-2" label="Everywhere"/>
+            <s:DataItem data="-1" label="Map Extent"/>
+        </s:ArrayList>
+    </s:dataProvider>
+</s:ComboBox>

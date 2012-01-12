@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+         xmlns:s="library://ns.adobe.com/flex/spark"
+         xmlns:mx="library://ns.adobe.com/flex/mx"
+         creationComplete="group1_creationCompleteHandler(event)">
+    <s:layout>
+        <s:HorizontalLayout verticalAlign="middle"/>
+    </s:layout>
+
+    <fx:Script>
+        <![CDATA[
+            import com.esri.signal.Signal;
+
+            import mx.events.FlexEvent;
+
+            private function textInput_enterHandler(event:FlexEvent):void
+            {
+                Signal.send('search', textInput.text);
+            }
+
+            private function searchButton_clickHandler(event:MouseEvent):void
+            {
+                Signal.send('search', textInput.text);
+            }
+
+            private function group1_creationCompleteHandler(event:FlexEvent):void
+            {
+                textInput.text = 'vacant|{"zip":"60623"}';
+            }
+        ]]>
+    </fx:Script>
+    <s:Label styleName="title" text="City of Chicago"/>
+    <s:Rect width="100%" height="10"/>
+    <s:TextInput id="textInput"
+                 width="500"
+                 enter="textInput_enterHandler(event)"/>
+    <s:Button id="searchButton"
+              click="searchButton_clickHandler(event)"
+              label="Go"/>
+</s:Group>

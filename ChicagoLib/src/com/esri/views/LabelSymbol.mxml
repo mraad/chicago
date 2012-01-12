@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<esri:InfoSymbol xmlns:mx="http://www.adobe.com/2006/mxml"
+                 xmlns:s="library://ns.adobe.com/flex/spark"
+                 xmlns:esri="http://www.esri.com/2008/ags"
+                 infoPlacement="top">
+    <esri:infoRenderer>
+        <mx:Component>
+            <mx:Label text="{data.label}"/>
+        </mx:Component>
+    </esri:infoRenderer>
+</esri:InfoSymbol>

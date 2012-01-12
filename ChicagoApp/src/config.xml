@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8 "?>
+<config>
+    <requestTimeout>20</requestTimeout>
+    <wkid>3857</wkid>
+    <xmin>-9765105</xmin>
+    <ymin>5132355</ymin>
+    <xmax>-9740970</xmax>
+    <ymax>5148713</ymax>
+	<zoomScale>20000</zoomScale>
+	<topoURL>http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</topoURL>
+	<streetURL>http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer</streetURL>
+	<aerialURL>http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer</aerialURL>
+	
+	<locatorURL>http://tasks.arcgisonline.com/ArcGIS/rest/services/Locators/TA_Streets_US_10/GeocodeServer</locatorURL>
+    <locatorKey>Single Line Input</locatorKey>
+    <locatorField>Match_addr</locatorField>
+	
+	<policyFileURL>xmlsocket://localhost:1008</policyFileURL>
+	<mongoHost>localhost</mongoHost>
+	<mongoPort>27017</mongoPort>
+	<mongoDB>chicago</mongoDB>
+	
+	<collection name="vacant" label="Vacant">
+		<symbol>
+			<SimpleMarkerSymbol color="red" size="10" alpha="0.8"/>
+		</symbol>
+		<field name="reqid" label="Request ID" tooltip="true"/>
+		<field name="date" label="Date" align="center"/>
+		<field name="addr" label="Address" tooltip="true" title="true"/>
+		<field name="zip" label="Zip Code"/>
+		<field name="entry" label="Entry"/>
+	</collection>
+	
+	<collection name="graffiti" label="Graffiti">
+		<symbol>
+			<SimpleMarkerSymbol color="green" size="10" alpha="0.8"/>
+		</symbol>
+		<field name="reqno" label="Request No" tooltip="true"/>
+		<field name="addr" label="Address" tooltip="true" title="true"/>
+		<field name="zip" label="Zip Code"/>
+		<field name="createdt" label="Report Date" align="center"/>
+		<field name="compltdt" label="Completed Date" align="center"/>
+		<field name="status" label="Status"/>
+		<field name="surface" label="Surface"/>
+		<field name="location" label="Location"/>
+	</collection>
+	
+</config>

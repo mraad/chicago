@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+               xmlns:s="library://ns.adobe.com/flex/spark"
+               xmlns:mx="library://ns.adobe.com/flex/mx"
+               xmlns:views="com.esri.views.*"
+               width="650"
+               close="this_closeHandler(event)"
+               creationComplete="this_creationCompleteHandler(event)"
+               title="Find">
+    <fx:Script>
+        <![CDATA[
+            import com.esri.ags.symbols.SimpleMarkerSymbol;
+            import com.esri.model.AppCollection;
+            import com.esri.model.FieldOptions;
+            import com.esri.model.FindOptions;
+            import com.esri.model.Model;
+            import com.esri.signal.Signal;
+
+            import mx.core.FlexGlobals;
+            import mx.events.CloseEvent;
+            import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+            import mx.managers.PopUpManager;
+
+            import spark.events.IndexChangeEvent;
+
+            public static function show():void
+            {
+                PopUpManager.centerPopUp(PopUpManager.createPopUp(FlexGlobals.topLevelApplication as DisplayObject, FindWindow, false));
+            }
+
+            private function this_closeHandler(event:CloseEvent):void
+            {
+                PopUpManager.removePopUp(this);
+            }
+
+            private function this_creationCompleteHandler(event:FlexEvent):void
+            {
+                fieldRendererGroup.addEventListener("addFieldRenderer", addFieldRendererHandler);
+                fieldRendererGroup.addEventListener("remFieldRenderer", remFieldRendererHandler);
+                addFieldRenderer(false);
+                setSymbol();
+            }
+
+            private function addFieldRenderer(enabled:Boolean = true):void
+            {
+                const mongoCollection:AppCollection = collectionDropDownList.selectedItem;
+                const fieldRenderer:FieldRenderer = new FieldRenderer();
+                fieldRenderer.remButton.enabled = enabled;
+                fieldRenderer.fieldList = new ArrayList(mongoCollection.fields);
+
+                fieldRendererGroup.addElement(fieldRenderer);
+            }
+
+            private function addFieldRendererHandler(event:Event):void
+            {
+                event.stopImmediatePropagation();
+                addFieldRenderer();
+            }
+
+            private function remFieldRendererHandler(event:Event):void
+            {
+                event.stopImmediatePropagation();
+                const fieldRenderer:FieldRenderer = event.target as FieldRenderer;
+                if (fieldRenderer)
+                {
+                    fieldRendererGroup.removeElement(fieldRenderer);
+                }
+            }
+
+            private function cancelButton_clickHandler(event:MouseEvent):void
+            {
+                PopUpManager.removePopUp(this);
+            }
+
+            private function submitButton_clickHandler(event:MouseEvent):void
+            {
+                const findOptions:FindOptions = new FindOptions();
+                findOptions.appCollection = collectionDropDownList.selectedItem;
+                findOptions.isWithin = withinRadioButton.selected;
+                if (findOptions.isWithin)
+                {
+                    findOptions.withinData = withinComboBox.selectedItem.data;
+                }
+                else
+                {
+                    findOptions.nearData = nearComboBox.selectedItem.data;
+                    findOptions.distance = distance.value;
+                    findOptions.unit = units.selectedItem.data;
+                }
+                findOptions.isAll = isAll.selectedIndex === 0;
+                findOptions.symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, markerSize.value, markerColor.selectedColor, markerAlpha.value);
+                const arr:Array = [];
+                for (var i:int = 0, num:int = fieldRendererGroup.numElements; i < num; i++)
+                {
+                    const fieldRenderer:FieldRenderer = fieldRendererGroup.getElementAt(i) as FieldRenderer;
+                    const findField:FieldOptions = new FieldOptions();
+                    findField.field = fieldRenderer.field.selectedItem;
+                    findField.operator = fieldRenderer.operator.selectedItem.data;
+                    findField.value = fieldRenderer.textInput.text;
+                    arr.push(findField);
+                }
+                findOptions.fields = arr;
+                Signal.send('find', findOptions);
+                fade.play();
+            }
+
+            private function collection_changeHandler(event:IndexChangeEvent):void
+            {
+                while (fieldRendererGroup.numElements)
+                {
+                    fieldRendererGroup.removeElementAt(0);
+                }
+                addFieldRenderer(false);
+                setSymbol();
+            }
+
+            private function setSymbol():void
+            {
+                const mongoCollection:AppCollection = collectionDropDownList.selectedItem;
+                const symbol:SimpleMarkerSymbol = mongoCollection.symbol as SimpleMarkerSymbol;
+                if (symbol)
+                {
+                    markerColor.selectedColor = symbol.color;
+                    markerSize.value = symbol.size;
+                    markerAlpha.value = symbol.alpha * 100;
+                }
+            }
+
+            private function fade_effectEndHandler(event:EffectEvent):void
+            {
+                PopUpManager.removePopUp(this);
+            }
+        ]]>
+    </fx:Script>
+    <fx:Declarations>
+        <s:Fade id="fade"
+                alphaFrom="1.0"
+                alphaTo="0"
+                effectEnd="fade_effectEndHandler(event)"
+                target="{this}"/>
+    </fx:Declarations>
+    <s:layout>
+        <s:VerticalLayout paddingBottom="5"
+                          paddingLeft="5"
+                          paddingRight="5"
+                          paddingTop="5"/>
+    </s:layout>
+
+    <s:HGroup verticalAlign="middle">
+        <s:Label text="All"/>
+        <s:DropDownList id="collectionDropDownList"
+                        change="collection_changeHandler(event)"
+                        dataProvider="{Model.instance.collectionList}"
+                        labelField="label"
+                        requireSelection="true"/>
+    </s:HGroup>
+
+    <s:HGroup verticalAlign="middle">
+        <s:RadioButton id="withinRadioButton"
+                       groupName="spatial"
+                       selected="true"/>
+        <s:Label text="Within"/>
+        <views:WithinComboBox id="withinComboBox"/>
+    </s:HGroup>
+
+    <s:HGroup verticalAlign="middle">
+        <s:RadioButton id="nearRadioButton" groupName="spatial"/>
+        <s:Label text="Near"/>
+        <views:NearComboBox id="nearComboBox"/>
+        <s:Label text="with max distance"/>
+        <s:NumericStepper id="distance"
+                          maximum="9999"
+                          minimum="0"
+                          value="100"/>
+        <s:ComboBox id="units" requireSelection="true">
+            <s:dataProvider>
+                <s:ArrayList>
+                    <s:DataItem data="feet" label="Feet"/>
+                    <s:DataItem data="miles" label="Miles"/>
+                </s:ArrayList>
+            </s:dataProvider>
+        </s:ComboBox>
+    </s:HGroup>
+
+    <s:HGroup verticalAlign="middle">
+        <s:Label text="And if"/>
+        <s:DropDownList id="isAll"
+                        labelField="label"
+                        requireSelection="true"
+                        typicalItem="MMM">
+            <s:dataProvider>
+                <s:ArrayList>
+                    <fx:String>all</fx:String>
+                    <fx:String>any</fx:String>
+                </s:ArrayList>
+            </s:dataProvider>
+        </s:DropDownList>
+        <s:Label text="of the following conditions are met:"/>
+    </s:HGroup>
+
+    <s:VGroup id="fieldRendererGroup"
+              width="100%" height="100%">
+    </s:VGroup>
+    <s:HGroup width="100%" verticalAlign="middle">
+        <s:Label text="Draw with color"/>
+        <mx:ColorPicker id="markerColor"/>
+        <s:Label text="size"/>
+        <s:NumericStepper id="markerSize"
+                          maximum="50"
+                          minimum="5"
+                          value="10"/>
+        <s:Label text="opacity %"/>
+        <s:NumericStepper id="markerAlpha"
+                          maximum="100"
+                          minimum="0"
+                          value="100"/>
+    </s:HGroup>
+
+    <s:HGroup width="100%"
+              horizontalAlign="right"
+              verticalAlign="middle">
+        <s:Button id="cancelButton"
+                  click="cancelButton_clickHandler(event)"
+                  label="Cancel"/>
+        <s:Button id="submitButton"
+                  click="submitButton_clickHandler(event)"
+                  label="Submit"/>
+    </s:HGroup>
+
+</s:TitleWindow>
