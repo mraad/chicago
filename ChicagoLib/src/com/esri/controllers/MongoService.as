@@ -247,7 +247,11 @@ public final class MongoService
         {
             if (field.isTooltip)
             {
-                arr.push(feature.attributes[field.name].toString());
+                const value:Object = feature.attributes[field.name];
+                if (value)
+                {
+                    arr.push(value.toString());
+                }
             }
             if (field.isTitle)
             {

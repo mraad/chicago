@@ -12,7 +12,14 @@
         ]]>
     </fx:Script>
     <s:Button click="Signal.send('findWindow')" label="Find..."/>
+    <s:Button click="Signal.send('queryWindow')" label="Query..."/>
+    <s:Label text="Draw"/>
+    <s:Button click="Signal.send('drawPoint')" label="Point"/>
+    <s:Button click="Signal.send('drawPoly')" label="Polygon"/>
     <s:Button click="Signal.send('drawRect')" label="Rectangle"/>
+    <s:Spacer width="100%"/>
+    <s:Button label="Analyze..."/>
+    <s:Button label="Route"/>
     <s:Spacer width="100%"/>
     <s:Button click="Signal.send('basemapTopo')" label="Topo"/>
     <s:Button click="Signal.send('basemapAerial')" label="Aerial"/>
