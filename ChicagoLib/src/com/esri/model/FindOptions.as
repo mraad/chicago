@@ -1,6 +1,7 @@
 package com.esri.model
 {
 
+import com.esri.ags.geometry.MapPoint;
 import com.esri.ags.symbols.Symbol;
 
 public class FindOptions
@@ -13,6 +14,7 @@ public class FindOptions
     public var withinData:int;
 
     public var nearData:int;
+    public var mapPoint:MapPoint;
     public var distance:Number;
     public var unit:String;
 

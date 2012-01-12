@@ -197,7 +197,9 @@
                           maximum="9999"
                           minimum="0"
                           value="100"/>
-        <s:ComboBox id="units" requireSelection="true">
+        <s:ComboBox id="units"
+                    requireSelection="true"
+                    typicalItem="mmmmm">
             <s:dataProvider>
                 <s:ArrayList>
                     <s:DataItem data="feet" label="Feet"/>

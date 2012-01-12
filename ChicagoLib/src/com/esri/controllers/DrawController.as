@@ -23,8 +23,6 @@ public final class DrawController
     private function drawTool_drawEndHandler(event:DrawEvent):void
     {
         m_drawTool.deactivate();
-        // ViewLocator.instance.polygonsLayer.remove(event.graphic);
-        // Model.instance.polygons.addItem(event.graphic);
     }
 }
 }

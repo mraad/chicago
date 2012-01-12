@@ -144,6 +144,10 @@ public final class MongoService
                 const nearFeature:Graphic = Model.instance.markers.getItemAt(findOptions.nearData) as Graphic;
                 addNear(obj, nearFeature.geometry, findOptions);
             }
+            else
+            {
+                addNear(obj, findOptions.mapPoint, findOptions);
+            }
         }
     }
 
@@ -209,7 +213,7 @@ public final class MongoService
                         const loc:Array = value;
                         mapPoint.x = WebMercator.longitudeToX(loc[0]);
                         mapPoint.y = WebMercator.latitudeToY(loc[1]);
-                        extent.unionPoint(mapPoint);
+                        extent.unionXY(mapPoint.x, mapPoint.y);
                     }
                     else
                     {
@@ -225,7 +229,7 @@ public final class MongoService
         }
         if (count > 1)
         {
-            Model.instance.extent = extent.expand(1.2);
+            Model.instance.extent = extent.expand(2.0);
         }
         else if (count === 1)
         {
