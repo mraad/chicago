@@ -47,14 +47,12 @@
 	
 	<featureclass name="wards" label="Wards" url="http://174.129.207.240/ArcGIS/rest/services/TB_Services/Chicago/MapServer/0">
 		<field name="OBJECTID" label="ObjectID" visible="false"/>
-		<field name="WARD" label="Ward" title="true" tooltip="true"/>
-		<field name="ALDERMAN" label="Alderman" tooltip="true"/>
+		<field name="ward" label="Ward" title="true" tooltip="true"/>
 	</featureclass>
 	
 	<featureclass name="beats" label="Beats" url="http://174.129.207.240/ArcGIS/rest/services/TB_Services/Chicago/MapServer/1">
 		<field name="OBJECTID" label="ObjectID" visible="false"/>
-		<field name="BEAT" label="Beat" title="true" tooltip="true"/>
-		<field name="DISTRICT" label="District" tooltip="true"/>
+		<field name="beat" label="Beat" title="true" tooltip="true"/>
 	</featureclass>
 	
 	<Basemaps>

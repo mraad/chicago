@@ -5,10 +5,11 @@ import com.esri.ags.SpatialReference;
 import com.esri.ags.geometry.Extent;
 import com.esri.ags.symbols.SimpleMarkerSymbol;
 import com.esri.ags.symbols.Symbol;
+import com.esri.model.AppCollection;
+import com.esri.model.AppFeatureServer;
 import com.esri.model.AppField;
 import com.esri.model.AppNameLabelFields;
 import com.esri.model.Model;
-import com.esri.model.AppCollection;
 import com.esri.signal.Signal;
 
 import mx.controls.LinkBar;
@@ -62,6 +63,8 @@ public final class LoadConfigController
             basemapController.basemapTopo();
 
             parseCollections(configXML.collection);
+			
+			parseFeatureClasses(configXML.featureclass);
         }
         Model.instance.statusText = "Ready.";
     }
@@ -79,6 +82,20 @@ public final class LoadConfigController
             Model.instance.collectionList.addItem(mongoCollection);
         }
     }
+	
+	private function parseFeatureClasses(featureClasses:XMLList):void
+	{
+		for each (var fcXML:XML in featureClasses)
+		{
+			const appFeatureServer:AppFeatureServer = new AppFeatureServer();
+			appFeatureServer.name = fcXML.@name;
+			appFeatureServer.label = fcXML.@label;
+			appFeatureServer.url = fcXML.@url;
+			parseFields(appFeatureServer, fcXML.field);
+			Model.instance.featureServerDict[appFeatureServer.name] = appFeatureServer;
+			Model.instance.featureServerArr.push(appFeatureServer);
+		}
+	}
 
     private function parseFields(dest:AppNameLabelFields, fields:XMLList):void
     {

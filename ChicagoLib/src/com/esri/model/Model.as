@@ -76,7 +76,8 @@ public final class Model extends EventDispatcher
 
     public var featureServerDict:Dictionary = new Dictionary();
 
-    public var featureServerList:Array = [];
+	[Bindable]
+    public var featureServerArr:Array = [];
 
     public var activeFeature:Graphic;
 

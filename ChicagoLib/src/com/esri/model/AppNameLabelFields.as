@@ -62,5 +62,17 @@ public class AppNameLabelFields extends AppNameLabel
         }
         return columns;
     }
+	
+	public function get titleField():AppField
+	{
+		for each (var field:AppField in fields)
+		{
+			if(field.isTitle) {
+				return field;
+			}
+		}
+		
+		return null;
+	}
 }
 }

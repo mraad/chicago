@@ -109,7 +109,7 @@ public final class IdentifyBoxController
         if (Model.instance.selectedMapServer)
         {
             const url:String = Model.instance.selectedMapServer.restURL + "/" + layerId;
-            for each (var featureServer:AppFeatureServer in Model.instance.featureServerList)
+            for each (var featureServer:AppFeatureServer in Model.instance.featureServerArr)
             {
                 if (featureServer.url === url)
                 {

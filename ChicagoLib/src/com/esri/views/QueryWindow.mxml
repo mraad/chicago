@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="this_creationCompleteHandler(event)"
+			   close="this_closeHandler(event)"
+			   width="500"
+			   title="Query">
+
+	<fx:Script>
+		<![CDATA[
+			import com.esri.model.Model;
+			import com.esri.signal.Signal;
+			
+			import mx.collections.ArrayList;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			public static function show():void
+			{
+				PopUpManager.centerPopUp(PopUpManager.createPopUp(FlexGlobals.topLevelApplication as DisplayObject, QueryWindow, false));
+			}
+
+			private function this_closeHandler(event:CloseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+			private function this_creationCompleteHandler(event:FlexEvent):void
+			{
+
+			}
+
+			private function fade_effectEndHandler(event:EffectEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+
+			private function submitButton_clickHandler(event:MouseEvent):void
+			{
+				Signal.send("queryExecute", featureServerDDList.selectedItem, whereClause.text);
+				fade.play();
+			}
+
+			private function cancelButton_clickHandler(event:MouseEvent):void
+			{
+				PopUpManager.removePopUp(this);
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:Fade id="fade"
+				alphaFrom="1.0"
+				alphaTo="0"
+				effectEnd="fade_effectEndHandler(event)"
+				target="{this}"/>
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout paddingBottom="5"
+						  paddingLeft="5"
+						  paddingRight="5"
+						  paddingTop="5"/>
+	</s:layout>
+
+	<s:HGroup verticalAlign="middle" width="100%">
+		<s:Label text="From: "/>
+		<s:DropDownList id="featureServerDDList" 
+						labelField="label"
+						requireSelection="true"
+						dataProvider="{new ArrayList(Model.instance.featureServerArr)}"/>
+		<s:Spacer width="10"/>
+		<s:Label text="Where: "/>
+		<s:TextInput id="whereClause" width="100%" />
+	</s:HGroup>
+
+	<s:HGroup width="100%"
+			  horizontalAlign="right"
+			  verticalAlign="middle">
+		<s:Button id="cancelButton"
+				  click="cancelButton_clickHandler(event)"
+				  label="Cancel"/>
+		<s:Button id="submitButton"
+				  click="submitButton_clickHandler(event)"
+				  label="Submit"/>
+	</s:HGroup>
+</s:TitleWindow>

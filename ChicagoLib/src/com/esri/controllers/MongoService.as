@@ -223,6 +223,9 @@ public final class MongoService
                     }
                 }
 
+				// do PIP
+				
+				
                 const feature:Graphic = new Graphic(mapPoint, m_findOptions.symbol, attr);
                 addTooltipAndTitle(feature);
                 markers.addItem(feature);
