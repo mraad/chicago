@@ -10,6 +10,7 @@ import com.esri.model.AppField;
 import com.esri.model.FieldOptions;
 import com.esri.model.FindOptions;
 import com.esri.model.Model;
+import com.esri.views.DataGridWindow;
 import com.esri.views.ViewLocator;
 
 import flash.system.Security;
@@ -197,7 +198,8 @@ public final class MongoService
     {
         CursorManager.removeBusyCursor();
         const count:int = 0;
-        const arrcol:ArrayCollection = Model.instance.markers;
+        const arrcol:ArrayCollection = new ArrayCollection();
+        const markers:ArrayCollection = Model.instance.markers;
         const extent:Extent = Extent.createEmptyExtent(Model.instance.spatialReference);
         for each (var reply:OpReply in m_cursor.replies)
         {
@@ -223,6 +225,7 @@ public final class MongoService
 
                 const feature:Graphic = new Graphic(mapPoint, m_findOptions.symbol, attr);
                 addTooltipAndTitle(feature);
+                markers.addItem(feature);
                 arrcol.addItem(feature);
                 count++;
             }
@@ -236,6 +239,10 @@ public final class MongoService
             const scale:Number = Model.instance.configXML.zoomScale;
             ViewLocator.instance.map.centerAt(mapPoint);
             ViewLocator.instance.map.scale = scale;
+        }
+        if (count > 0)
+        {
+            DataGridWindow.show(m_findOptions.appCollection, arrcol);
         }
         Model.instance.statusText = "Found " + count + " Feature(s)";
     }

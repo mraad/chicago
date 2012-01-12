@@ -37,5 +37,11 @@ public final class ActiveFeatureController
             Model.instance.activeFeature = null;
         }
     }
+
+    [Signal]
+    public function dataGridClick(feature:Graphic, features:Array):void
+    {
+        activeFeature(feature);
+    }
 }
 }

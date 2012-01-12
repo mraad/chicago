@@ -2,6 +2,7 @@ package com.esri.views
 {
 
 import com.esri.ags.Graphic;
+import com.esri.signal.Signal;
 
 import mx.controls.DataGrid;
 import mx.core.ClassFactory;
@@ -36,11 +37,7 @@ public final class AppDataGrid extends DataGrid
     {
         if (selectedItem is Graphic)
         {
-            /*
-            const appEvent:AppEvent = new AppEvent(AppEvent.DATA_GRID_DOUBLE_CLICK);
-            appEvent.selectedGraphic = selectedItem;
-            appEvent.dispatch();
-            */
+            Signal.send('dataGridDoubleClick', selectedItem);
         }
     }
 
@@ -48,12 +45,7 @@ public final class AppDataGrid extends DataGrid
     {
         if (selectedItem is Graphic)
         {
-            /*
-            const appEvent:AppEvent = new AppEvent(AppEvent.DATA_GRID_CLICK);
-            appEvent.selectedGraphic = selectedItem;
-            appEvent.selectedGraphics = selectedItems;
-            appEvent.dispatch();
-            */
+            Signal.send('dataGridClick', selectedItem, selectedItems);
         }
     }
 
