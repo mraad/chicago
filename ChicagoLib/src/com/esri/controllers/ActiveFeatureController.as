@@ -2,36 +2,39 @@ package com.esri.controllers
 {
 
 import com.esri.ags.Graphic;
+import com.esri.model.Model;
 
 import spark.filters.GlowFilter;
 
 public final class ActiveFeatureController
 {
-    private var m_lastFeature:Graphic;
     private var m_filters:Array;
 
     [Signal]
     public function activeFeature(feature:Graphic):void
     {
-        if (m_lastFeature)
+        if (Model.instance.activeFeature)
         {
-            m_lastFeature.filters = null;
+            Model.instance.activeFeature.filters = null;
         }
         if (m_filters === null)
         {
             m_filters = [ new GlowFilter(0xFFFF00, 1.0, 5, 5, 4)];
         }
-        m_lastFeature = feature;
-        m_lastFeature.filters = m_filters;
+        if (feature)
+        {
+            feature.filters = m_filters;
+        }
+        Model.instance.activeFeature = feature;
     }
 
     [Signal]
     public function clearAll():void
     {
-        if (m_lastFeature)
+        if (Model.instance.activeFeature)
         {
-            m_lastFeature.filters = null;
-            m_lastFeature = null;
+            Model.instance.activeFeature.filters = null;
+            Model.instance.activeFeature = null;
         }
     }
 }

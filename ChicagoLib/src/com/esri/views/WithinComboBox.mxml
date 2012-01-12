@@ -18,10 +18,15 @@
             private function this_creationCompleteHandler(event:FlexEvent):void
             {
                 var maxitem:String = "mmmmmmmmmm";
+                var active:int = -1;
                 const index:int = 0;
                 const count:int = 0;
                 for each (var feature:Graphic in Model.instance.polygons.source)
                 {
+                    if (feature === Model.instance.activeFeature)
+                    {
+                        active = index;
+                    }
                     const dataItem:DataItem = new DataItem();
                     dataItem.feature = feature;
                     dataItem.data = index++;
@@ -41,6 +46,7 @@
                     arrList.addItem(dataItem);
                 }
                 typicalItem = maxitem;
+                selectedIndex = active === -1 ? 0 : active + 2;
             }
 
             private function this_changeHandler(event:IndexChangeEvent):void

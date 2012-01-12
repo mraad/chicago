@@ -1,13 +1,13 @@
 package com.esri.model
 {
 
+import com.esri.ags.Graphic;
 import com.esri.ags.SpatialReference;
 import com.esri.ags.clusterers.IClusterer;
 import com.esri.ags.geometry.Extent;
 import com.esri.ags.symbols.Symbol;
 import com.esri.views.LabelSymbol;
 
-import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.utils.Dictionary;
 
@@ -77,6 +77,8 @@ public final class Model extends EventDispatcher
     public var featureServerDict:Dictionary = new Dictionary();
 
     public var featureServerList:Array = [];
+
+    public var activeFeature:Graphic;
 
     public function Model()
     {

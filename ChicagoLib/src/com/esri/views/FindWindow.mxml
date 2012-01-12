@@ -16,6 +16,7 @@
             import com.esri.model.Model;
             import com.esri.signal.Signal;
 
+            import mx.controls.Alert;
             import mx.core.FlexGlobals;
             import mx.events.CloseEvent;
             import mx.events.EffectEvent;
@@ -94,15 +95,38 @@
                 for (var i:int = 0, num:int = fieldRendererGroup.numElements; i < num; i++)
                 {
                     const fieldRenderer:FieldRenderer = fieldRendererGroup.getElementAt(i) as FieldRenderer;
-                    const findField:FieldOptions = new FieldOptions();
-                    findField.field = fieldRenderer.field.selectedItem;
-                    findField.operator = fieldRenderer.operator.selectedItem.data;
-                    findField.value = fieldRenderer.textInput.text;
-                    arr.push(findField);
+                    const text:String = fieldRenderer.textInput.text;
+                    if (text)
+                    {
+                        const findField:FieldOptions = new FieldOptions();
+                        findField.field = fieldRenderer.field.selectedItem;
+                        findField.operator = fieldRenderer.operator.selectedItem.data;
+                        findField.value = text;
+                        arr.push(findField);
+                    }
                 }
                 findOptions.fields = arr;
-                Signal.send('find', findOptions);
-                fade.play();
+                if (findOptions.isWithin && findOptions.withinData === -2 && arr.length === 0)
+                {
+                    Alert.show("Do you want to proceed ?", "No Constraint Was Defined", Alert.YES | Alert.NO, null, closeHandler, null, Alert.NO);
+                    function closeHandler(event:CloseEvent):void
+                    {
+                        if (event.detail === Alert.YES)
+                        {
+                            sendSignal();
+
+                        }
+                    }
+                }
+                else
+                {
+                    sendSignal();
+                }
+                function sendSignal():void
+                {
+                    Signal.send('find', findOptions);
+                    fade.play();
+                }
             }
 
             private function collection_changeHandler(event:IndexChangeEvent):void

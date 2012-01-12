@@ -11,18 +11,23 @@
             import com.esri.ags.Graphic;
             import com.esri.model.Model;
             import com.esri.signal.Signal;
-
+            
             import mx.events.FlexEvent;
-
+            
             import spark.events.IndexChangeEvent;
 
             private function this_creationCompleteHandler(event:FlexEvent):void
             {
                 var maxitem:String = "mmmmmmmmmm";
+                var active:int = -1;
                 const index:int = 0;
                 const count:int = 0;
                 for each (var feature:Graphic in Model.instance.markers.source)
                 {
+                    if (feature === Model.instance.activeFeature)
+                    {
+                        active = index;
+                    }
                     const dataItem:DataItem = new DataItem();
                     dataItem.feature = feature;
                     dataItem.data = index++;
@@ -42,6 +47,7 @@
                     arrList.addItem(dataItem);
                 }
                 typicalItem = maxitem;
+                selectedIndex = active === -1 ? 0 : active + 1;
             }
 
             private function this_changeHandler(event:IndexChangeEvent):void

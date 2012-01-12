@@ -16,8 +16,6 @@ import flash.system.Security;
 import flash.utils.Dictionary;
 
 import mx.collections.ArrayCollection;
-import mx.controls.Alert;
-import mx.events.CloseEvent;
 import mx.managers.CursorManager;
 
 import org.db.mongo.Collection;
@@ -56,37 +54,9 @@ public final class MongoService
         }
         const queryObject:Object = toQueryObject(findOptions);
         trace(JSON.stringify(queryObject));
-        if (emptyObject(queryObject))
-        {
-            Alert.show('Are you sure you want to proceed?', "No constraint was defined", Alert.YES | Alert.NO, null, closeHandler, null, Alert.NO);
-            function closeHandler(event:CloseEvent):void
-            {
-                if (event.detail === Alert.YES)
-                {
-                    doFind();
-                }
-            }
-        }
-        else
-        {
-            doFind();
-        }
-        function doFind():void
-        {
-            const collection:Collection = m_db.getCollection(findOptions.appCollection.name);
-            m_cursor = collection.find(queryObject, null, findHandler);
-            CursorManager.setBusyCursor();
-        }
-    }
-
-    private function emptyObject(obj:Object):Boolean
-    {
-        var count:int = 0;
-        for (var key:String in obj)
-        {
-            count++;
-        }
-        return count === 0;
+        const collection:Collection = m_db.getCollection(findOptions.appCollection.name);
+        m_cursor = collection.find(queryObject, null, findHandler);
+        CursorManager.setBusyCursor();
     }
 
     private function toDict(findOptions:FindOptions):Dictionary
