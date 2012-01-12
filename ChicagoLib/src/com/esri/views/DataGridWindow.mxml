@@ -5,28 +5,35 @@
                xmlns:views="com.esri.views.*"
                width="600" height="300"
                close="this_closeHandler(event)">
-    <s:layout>
-        <s:VerticalLayout/>
-    </s:layout>
     <fx:Script>
         <![CDATA[
             import com.esri.ags.Graphic;
             import com.esri.model.AppCollection;
+            import com.esri.model.AppField;
             import com.esri.model.Model;
 
             import mx.collections.ArrayCollection;
+            import mx.collections.ArrayList;
             import mx.core.FlexGlobals;
             import mx.events.CloseEvent;
             import mx.events.EffectEvent;
             import mx.managers.PopUpManager;
 
+            import spark.utils.DataItem;
+
             public static function show(appCollection:AppCollection, arrcol:ArrayCollection):void
             {
                 const dataGridWindow:DataGridWindow = PopUpManager.createPopUp(FlexGlobals.topLevelApplication as DisplayObject, DataGridWindow) as DataGridWindow;
+                dataGridWindow.title = appCollection.label;
                 dataGridWindow.dataGrid.columns = appCollection.columns;
                 dataGridWindow.dataGrid.dataProvider = arrcol;
+                dataGridWindow.countLabel.text = arrcol.length + " Record(s)";
+                dataGridWindow.dropDownList.dataProvider = new ArrayList(appCollection.fields);
                 PopUpManager.centerPopUp(dataGridWindow);
             }
+
+            [Bindable]
+            public var pieChartData:Array;
 
             private function this_closeHandler(event:CloseEvent):void
             {
@@ -42,6 +49,51 @@
             {
                 PopUpManager.removePopUp(this);
             }
+
+            private function tableButton_clickHandler(event:MouseEvent):void
+            {
+                currentState = "grid";
+            }
+
+            private function chartButton_clickHandler(event:MouseEvent):void
+            {
+                var dataItem:DataItem;
+                const appField:AppField = dropDownList.selectedItem;
+                const arrcol:ArrayCollection = dataGrid.dataProvider as ArrayCollection;
+                const dict:Dictionary = new Dictionary();
+                for each (var feature:Graphic in arrcol.source)
+                {
+                    const value:Object = feature.attributes[appField.name];
+                    if (value)
+                    {
+                        const key:String = value.toString();
+                        dataItem = dict[key];
+                        if (dataItem)
+                        {
+                            dataItem.value += 1;
+                        }
+                        else
+                        {
+                            dataItem = new DataItem();
+                            dataItem.label = key;
+                            dataItem.value = 1;
+                            dict[key] = dataItem;
+                        }
+                    }
+                }
+                const arr:Array = [];
+                for each (dataItem in dict)
+                {
+                    arr.push(dataItem);
+                }
+                pieChartData = arr;
+                currentState = "chart";
+            }
+
+            private function pieFunc(data:Object, field:String, index:Number, percentValue:Number):String
+            {
+                return data.label + ':' + data.value + '\n' + numFormatter.format(percentValue) + "%";
+            }
         ]]>
     </fx:Script>
     <fx:Declarations>
@@ -49,7 +101,69 @@
                 alphaFrom="1.0"
                 alphaTo="0.0"
                 effectEnd="fade_effectEndHandler(event)"/>
+        <s:NumberFormatter id="numFormatter" fractionalDigits="2"/>
     </fx:Declarations>
-    <views:AppDataGrid id="dataGrid"
-                       width="100%" height="100%"/>
+    <s:states>
+        <s:State name="grid"/>
+        <s:State name="chart"/>
+    </s:states>
+    <s:transitions>
+        <s:Transition>
+            <s:Fade targets="{[gridGroup,chartGroup]}"/>
+        </s:Transition>
+    </s:transitions>
+    <s:VGroup id="gridGroup"
+              width="100%" height="100%"
+              alpha="0"
+              alpha.grid="1"
+              gap="5"
+              includeIn="grid"
+              paddingBottom="5"
+              paddingLeft="5"
+              paddingRight="5"
+              paddingTop="5">
+        <views:AppDataGrid id="dataGrid"
+                           width="100%" height="100%"/>
+        <s:HGroup width="100%" verticalAlign="middle">
+            <s:Label id="countLabel"/>
+            <s:Spacer width="100%"/>
+            <s:Label text="Graph by"/>
+            <s:DropDownList id="dropDownList" requireSelection="true"/>
+            <s:Button id="chartButton"
+                      click="chartButton_clickHandler(event)"
+                      label="Show"/>
+        </s:HGroup>
+    </s:VGroup>
+    <s:VGroup id="chartGroup"
+              width="100%" height="100%"
+              alpha="0"
+              alpha.chart="1"
+              gap="5"
+              includeIn="chart"
+              paddingBottom="5"
+              paddingLeft="5"
+              paddingRight="5"
+              paddingTop="5">
+        <mx:PieChart id="pieChart"
+                     width="100%" height="100%"
+                     dataProvider="{pieChartData}">
+            <mx:series>
+                <mx:PieSeries field="value"
+                              labelFunction="pieFunc"
+                              labelPosition="callout"
+                              nameField="label">
+                    <mx:filters>
+                        <fx:Array/>
+                    </mx:filters>
+                </mx:PieSeries>
+            </mx:series>
+        </mx:PieChart>
+        <s:HGroup width="100%"
+                  horizontalAlign="right"
+                  verticalAlign="middle">
+            <s:Button id="tableButton"
+                      click="tableButton_clickHandler(event)"
+                      label="Back"/>
+        </s:HGroup>
+    </s:VGroup>
 </s:TitleWindow>

@@ -196,17 +196,17 @@
         <s:NumericStepper id="distance"
                           maximum="9999"
                           minimum="0"
-                          value="100"/>
-        <s:ComboBox id="units"
-                    requireSelection="true"
-                    typicalItem="mmmmm">
+                          value="1"/>
+        <s:DropDownList id="units"
+                        requireSelection="true"
+                        typicalItem="mmmmm">
             <s:dataProvider>
                 <s:ArrayList>
-                    <s:DataItem data="feet" label="Feet"/>
                     <s:DataItem data="miles" label="Miles"/>
+                    <s:DataItem data="feet" label="Feet"/>
                 </s:ArrayList>
             </s:dataProvider>
-        </s:ComboBox>
+        </s:DropDownList>
     </s:HGroup>
 
     <s:HGroup verticalAlign="middle">
