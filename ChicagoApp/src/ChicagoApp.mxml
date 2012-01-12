@@ -36,9 +36,10 @@
             <controllers:GraphicPropertiesController/>
             <controllers:ContextMenuController id="contextMenuController"/>
             <controllers:ClusterPointsController/>
-            <controllers:FindController/>
-            <controllers:DrawController/>
             <controllers:ActiveFeatureController/>
+            <controllers:FindController/>
+            <controllers:QueryController/>
+            <controllers:DrawController/>
         </ns:Registry>
     </fx:Declarations>
     <s:layout>

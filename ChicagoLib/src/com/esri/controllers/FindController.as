@@ -24,7 +24,7 @@ public final class FindController
     }
 
     [Signal]
-    public function find(findOptions:FindOptions):void
+    public function findExecute(findOptions:FindOptions):void
     {
         if (findOptions.isWithin === false && findOptions.nearData === -1) // Map Click
         {
