@@ -13,6 +13,7 @@ public final class DrawController
     public function drawRect():void
     {
         m_drawTool.map = ViewLocator.instance.map;
+        m_drawTool.showDrawTips = false;
         m_drawTool.graphicsLayer = ViewLocator.instance.polygonsLayer;
         m_drawTool.removeEventListener(DrawEvent.DRAW_END, drawTool_drawEndHandler);
         m_drawTool.addEventListener(DrawEvent.DRAW_END, drawTool_drawEndHandler);

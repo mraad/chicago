@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
          xmlns:s="library://ns.adobe.com/flex/spark"
-         xmlns:mx="library://ns.adobe.com/flex/mx"
-         creationComplete="group1_creationCompleteHandler(event)">
+         xmlns:mx="library://ns.adobe.com/flex/mx">
     <s:layout>
         <s:HorizontalLayout verticalAlign="middle"/>
     </s:layout>
@@ -21,11 +20,6 @@
             private function searchButton_clickHandler(event:MouseEvent):void
             {
                 Signal.send('search', textInput.text);
-            }
-
-            private function group1_creationCompleteHandler(event:FlexEvent):void
-            {
-                textInput.text = 'vacant|{"zip":"60623"}';
             }
         ]]>
     </fx:Script>

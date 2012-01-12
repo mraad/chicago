@@ -4,6 +4,7 @@
             xmlns:mx="library://ns.adobe.com/flex/mx"
             change="this_changeHandler(event)"
             creationComplete="this_creationCompleteHandler(event)"
+            maxWidth="300"
             requireSelection="true">
     <fx:Script>
         <![CDATA[

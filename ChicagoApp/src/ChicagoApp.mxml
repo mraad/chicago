@@ -14,8 +14,6 @@
             import com.esri.signal.Signal;
             import com.esri.views.ViewLocator;
 
-            <!-- MMM2 -->
-
             override protected function createChildren():void
             {
                 super.createChildren();
