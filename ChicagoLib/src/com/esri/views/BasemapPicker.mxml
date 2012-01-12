@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 top="5" right="10"
+		 initialize="onInit(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.esri.model.ConfigModel;
+			
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			private var timer:Timer = new Timer(300, 1);
+			
+			protected function onInit(event:FlexEvent):void
+			{
+				timer.addEventListener(TimerEvent.TIMER_COMPLETE, onTimerComplete);
+			}
+			
+			protected function onTimerComplete(e:TimerEvent):void
+			{
+				bmContainer.visible = false;
+			}
+			
+			protected function startTimer():void
+			{
+				timer.reset();
+				timer.start();
+			}
+			
+			protected function bmImage_rollOverHandler(event:MouseEvent):void
+			{
+				bmContainer.visible = true;
+				timer.reset();
+			}
+			
+			protected function bmImage_rollOutHandler(event:MouseEvent):void
+			{
+				timer.reset();
+				timer.start();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:Fade id="fadeIn" alphaFrom="0.0" alphaTo="1.0" duration="500" target="bmContainer" />
+		<s:Fade id="fadeOut" alphaFrom="1.0" alphaTo="0.0" duration="1000" target="bmContainer" />
+	</fx:Declarations>
+	
+	<s:Image id="bmImage" 
+			 source="assets/images/iBasemaps.png" alpha="0.7" 
+			 useHandCursor="true" buttonMode="true" 
+			 rollOver="bmImage_rollOverHandler(event)" 
+			 rollOut="bmImage_rollOutHandler(event)" />
+	<s:BorderContainer id="bmContainer" alpha="0.3"
+					   width="275" height="{40+(Math.round(ConfigModel.configInfo._basemapsAC.length / 2) * 106)}" 
+					   x="-276" 
+					   includeInLayout="false" 
+					   rollOut="startTimer()" 
+					   rollOver="timer.reset()" 
+					   showEffect="{fadeIn}" hideEffect="{fadeOut}" 
+					   visible="false">
+		<s:layout>
+			<s:VerticalLayout paddingBottom="5" paddingTop="10" 
+							  paddingLeft="3" paddingRight="3" 
+							  horizontalAlign="center" />
+		</s:layout>
+		<s:HGroup width="100%" >
+			
+			<s:Label width="100%" 
+				 text="Basemap Selector" 
+				 textAlign="center" 
+				 styleName="BasemapPickerTitle" />
+		
+		</s:HGroup>
+		
+		<s:DataGroup width="275" 
+					 itemRenderer="com.esri.views.BasemapItemRenderer"
+					 dataProvider="{ConfigModel.configInfo._basemapsAC}">
+			
+			<s:layout>
+				<s:TileLayout paddingLeft="5" paddingRight="5" paddingTop="10" 
+							  horizontalGap="5" verticalGap="5" horizontalAlign="center" 
+							  requestedColumnCount="2"/>
+			</s:layout>
+			
+		</s:DataGroup>
+		
+	</s:BorderContainer>
+	
+</s:Group>

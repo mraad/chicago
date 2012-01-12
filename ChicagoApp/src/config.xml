@@ -57,4 +57,43 @@
 		<field name="DISTRICT" label="District" tooltip="true"/>
 	</featureclass>
 	
+	<Basemaps>
+        <TiledMap>
+            <Id>0</Id>
+            <Name>Topo</Name>
+            <URL>http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer</URL>
+            <Thumbnail>iMap_Topo.png</Thumbnail>
+        </TiledMap>
+        <TiledMap>
+            <Id>1</Id>
+            <Name>Imagery</Name>
+            <URL>http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer</URL>
+            <Thumbnail>iMap_Imagery.png</Thumbnail>
+        </TiledMap>
+        <TiledMap>
+            <Id>2</Id>
+            <Name>World Streets</Name>
+            <URL>http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer</URL>
+            <Thumbnail>iMap_Streets.png</Thumbnail>
+        </TiledMap>
+        <TiledMap>
+            <Id>3</Id>
+            <Name>Muted Grey</Name>
+            <URL>http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer</URL>
+            <Thumbnail>iMap_Muted.png</Thumbnail>
+        </TiledMap>
+        <TiledMap>
+            <Id>4</Id>
+            <Name>Oceans</Name>
+            <URL>http://services.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer</URL>
+            <Thumbnail>iMap_Oceans.png</Thumbnail>
+        </TiledMap>
+        <TiledMap>
+            <Id>5</Id>
+            <Name>National Geographic</Name>
+            <URL>http://services.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer</URL>
+            <Thumbnail>iMap_OSM.png</Thumbnail>
+        </TiledMap>
+        <SetActiveBasemapID>3</SetActiveBasemapID>
+    </Basemaps>
 </config>

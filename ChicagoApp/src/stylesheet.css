@@ -79,3 +79,9 @@ esri|InfoSymbolWindow
     shadowAngle: 45.0;
     shadowColor: #000000;
 }
+
+.BasemapPickerTitle {
+	color: #A4C639;
+	font-size: 14;
+	font-weight: bold;
+}

@@ -25,6 +25,11 @@ public final class BasemapController
         Model.instance.basemapURL = Model.instance.configXML.streetURL;
     }
 
+	[Signal]
+	public function changeBasemap(url:String):void
+	{
+		Model.instance.basemapURL = url;
+	}
 
 }
 }

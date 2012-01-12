@@ -25,6 +25,7 @@
     </fx:Script>
     <fx:Declarations>
         <ns:Registry id="registry">
+			<controllers:ManageApplicationConfiguration/>
             <controllers:MongoService/>
             <controllers:FaultController/>
             <controllers:ClearAllController/>
@@ -48,9 +49,9 @@
                           paddingLeft="5"
                           paddingRight="5"
                           paddingTop="5"/>
-    </s:layout>
+    </s:layout>	
     <views:HeaderGroup id="headerGroup" width="100%"/>
-    <views:ActionGroup id="actionGroup" width="100%"/>
+	<views:ActionGroup id="actionGroup" width="100%"/> 
     <esri:Map id="map"
               extent="{Model.instance.extent}"
               openHandCursorVisible="false"
