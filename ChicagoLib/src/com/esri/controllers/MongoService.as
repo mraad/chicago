@@ -4,8 +4,11 @@ package com.esri.controllers
 import com.esri.ags.Graphic;
 import com.esri.ags.esri_internal;
 import com.esri.ags.geometry.Extent;
+import com.esri.ags.geometry.GeomUtils;
 import com.esri.ags.geometry.Geometry;
 import com.esri.ags.geometry.MapPoint;
+import com.esri.ags.geometry.Polygon;
+import com.esri.ags.utils.GeometryUtil;
 import com.esri.model.AppField;
 import com.esri.model.FieldOptions;
 import com.esri.model.FindOptions;
@@ -35,6 +38,9 @@ public final class MongoService
     private var m_cursor:Cursor;
 
     private var m_findOptions:FindOptions;
+
+    private var m_ring:Array;
+    private var m_pip:Function = noop;
 
     public function find(findOptions:FindOptions):void
     {
@@ -126,6 +132,7 @@ public final class MongoService
 
     private function addSpatial(obj:Object, findOptions:FindOptions):void
     {
+        m_pip = noop;
         if (findOptions.isWithin)
         {
             if (findOptions.withinData === -1)
@@ -135,6 +142,11 @@ public final class MongoService
             else if (findOptions.withinData > -1)
             {
                 const withinFeature:Graphic = Model.instance.polygons.getItemAt(findOptions.withinData) as Graphic;
+                if (withinFeature.geometry is Polygon)
+                {
+                    m_ring = Polygon(withinFeature.geometry).rings[0];
+                    m_pip = pointInPolygon;
+                }
                 addWithin(obj, withinFeature.geometry.extent);
             }
         }
@@ -223,14 +235,14 @@ public final class MongoService
                     }
                 }
 
-				// do PIP
-				
-				
-                const feature:Graphic = new Graphic(mapPoint, m_findOptions.symbol, attr);
-                addTooltipAndTitle(feature);
-                markers.addItem(feature);
-                arrcol.addItem(feature);
-                count++;
+                if (m_pip(mapPoint))
+                {
+                    const feature:Graphic = new Graphic(mapPoint, m_findOptions.symbol, attr);
+                    addTooltipAndTitle(feature);
+                    markers.addItem(feature);
+                    arrcol.addItem(feature);
+                    count++;
+                }
             }
         }
         if (count > 1)
@@ -269,6 +281,16 @@ public final class MongoService
             }
         }
         feature.toolTip = arr.length ? arr.join("\n") : null;
+    }
+
+    private function noop(mapPoint:MapPoint):Boolean
+    {
+        return true;
+    }
+
+    private function pointInPolygon(mapPoint:MapPoint):Boolean
+    {
+        return GeomUtils.contains(m_ring, mapPoint.x, mapPoint.y);
     }
 
 }
