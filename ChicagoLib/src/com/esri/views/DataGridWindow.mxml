@@ -8,6 +8,8 @@
     <fx:Script>
         <![CDATA[
             import com.esri.ags.Graphic;
+            import com.esri.ags.symbols.SimpleMarkerSymbol;
+            import com.esri.ags.symbols.Symbol;
             import com.esri.model.AppCollection;
             import com.esri.model.AppField;
             import com.esri.model.Model;
@@ -17,6 +19,9 @@
             import mx.core.FlexGlobals;
             import mx.events.CloseEvent;
             import mx.events.EffectEvent;
+            import mx.events.FlexEvent;
+            import mx.graphics.IFill;
+            import mx.graphics.SolidColor;
             import mx.managers.PopUpManager;
 
             import spark.utils.DataItem;
@@ -34,6 +39,37 @@
 
             [Bindable]
             public var pieChartData:Array;
+
+            private const colors:Array = [
+                14976769,
+                10861646,
+                1807833,
+                13290142,
+                6722480,
+                15752743,
+                8835556,
+                15006112,
+                16766226,
+                7712768,
+                418480,
+                15591622,
+                13382400,
+                13754343,
+                5428426,
+                12968029,
+                15188340,
+                16775063,
+                12973711,
+                12448230,
+                10393725,
+                15440013,
+                9554405,
+                9690186,
+                16759040,
+                10402765,
+                38807,
+                897730
+                ];
 
             private function this_closeHandler(event:CloseEvent):void
             {
@@ -57,11 +93,12 @@
 
             private function chartButton_clickHandler(event:MouseEvent):void
             {
+                var feature:Graphic;
                 var dataItem:DataItem;
                 const appField:AppField = dropDownList.selectedItem;
                 const arrcol:ArrayCollection = dataGrid.dataProvider as ArrayCollection;
                 const dict:Dictionary = new Dictionary();
-                for each (var feature:Graphic in arrcol.source)
+                for each (feature in arrcol.source)
                 {
                     const value:Object = feature.attributes[appField.name];
                     if (value)
@@ -84,7 +121,22 @@
                 const arr:Array = [];
                 for each (dataItem in dict)
                 {
+                    const color:Number = colors[arr.length % colors.length];
+                    dataItem.symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 10, color);
                     arr.push(dataItem);
+                }
+                for each (feature in arrcol.source)
+                {
+                    const value2:Object = feature.attributes[appField.name];
+                    if (value2)
+                    {
+                        const key2:String = value2.toString();
+                        dataItem = dict[key2];
+                        if (dataItem)
+                        {
+                            feature.symbol = dataItem.symbol;
+                        }
+                    }
                 }
                 pieChartData = arr;
                 currentState = "chart";
@@ -148,7 +200,8 @@
                      width="100%" height="100%"
                      dataProvider="{pieChartData}">
             <mx:series>
-                <mx:PieSeries field="value"
+                <mx:PieSeries id="pieSeries"
+                              field="value"
                               labelFunction="pieFunc"
                               labelPosition="callout"
                               nameField="label">

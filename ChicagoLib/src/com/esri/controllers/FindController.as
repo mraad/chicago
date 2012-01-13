@@ -33,6 +33,7 @@ public final class FindController
             function mapClickHandler(event:MapMouseEvent):void
             {
                 ViewLocator.instance.map.removeEventListener(MapMouseEvent.MAP_CLICK, mapClickHandler);
+                Model.instance.markers.addItem(new Graphic(event.mapPoint, null, { label: "Map click location" }));
                 findOptions.mapPoint = event.mapPoint;
                 mongoService.find(findOptions);
             }

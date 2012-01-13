@@ -45,6 +45,17 @@
 		<field name="location" label="Location"/>
 	</collection>
 	
+	<collection name="col311" label="311">
+		<symbol>
+			<SimpleMarkerSymbol color="cyan" size="10" alpha="0.8"/>
+		</symbol>
+		<field name="reqno" label="Request No" tooltip="true"/>
+		<field name="addr" label="Address" tooltip="true" title="true"/>
+		<field name="zip" label="Zip Code"/>
+		<field name="date" label="Date" align="center"/>
+		<field name="type" label="Type"/>
+	</collection>
+	
 	<featureclass name="wards" label="Wards" url="http://174.129.207.240/ArcGIS/rest/services/TB_Services/Chicago/MapServer/0">
 		<field name="OBJECTID" label="ObjectID" visible="false"/>
 		<field name="ward" label="Ward" title="true" tooltip="true"/>
